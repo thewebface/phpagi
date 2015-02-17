@@ -251,6 +251,14 @@
         return $res;
       }
 
+      // Some modules (e.g. DAHDI) don't set EventList, so parse the message and fake it
+      if(isset($res['Message']) && substr($res['Message'], -12) == ' will follow') {
+        $res['EventList'] = 'start';
+      }
+      if(isset($res['Event']) && substr($res['Event'], -8) == 'Complete') {
+        $res['EventList'] = 'Complete';
+      }
+
       if (isset($res['EventList']) && $res['EventList']=='start') {
         $evlist = array();
         do {
