@@ -364,7 +364,7 @@ class AGI
     */
     function exec($application, $options)
     {
-        if(is_array($options)) $options = join('|', $options);
+        $options = join($this->option_delim, (array) $options);
         return $this->evaluate("EXEC $application $options");
     }
 
@@ -832,7 +832,9 @@ class AGI
     */
     function exec_agi($command, $args)
     {
-        return $this->exec("AGI $command", $args);
+        $args = array_map(function($x) {return '\\"' . str_replace(' ','\ ',$x) . '\\"';}, (array) $args);
+        $args = array_merge([$command], $args);
+        return $this->exec("AGI", $args);
     }
 
     /**
